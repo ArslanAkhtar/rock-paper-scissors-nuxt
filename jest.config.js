@@ -15,5 +15,5 @@ module.exports = {
     ".*\\.(vue)$": "@vue/vue3-jest",
   },
   transformIgnorePatterns: ["node_modules/(?!(nuxt3|unenv))"],
-  setupFiles: ["./plugins/global-test-utils-config.ts"],
+  setupFiles: ["./test-utils/global-test-utils-config.ts"],
 };
