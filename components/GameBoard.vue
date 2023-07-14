@@ -1,19 +1,3 @@
-<template>
-  <div>
-    <h2>Player Score: {{ playerScore }}</h2>
-    <h2>Computer Score: {{ computerScore }}</h2>
-    <div>
-      <button @click="chooseOption('rock')">Rock</button>
-      <button @click="chooseOption('paper')">Paper</button>
-      <button @click="chooseOption('scissors')">Scissors</button>
-    </div>
-    <div v-if="result !== null">
-      <h3>{{ result }}</h3>
-      <button @click="resetGame">Play Again</button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref } from "vue";
 
@@ -46,3 +30,19 @@ const resetGame = () => {
   result.value = null;
 };
 </script>
+
+<template>
+  <!-- <div>
+    <h2>Player Score: {{ playerScore }}</h2>
+    <h2>Computer Score: {{ computerScore }}</h2>
+    <div>
+      <v-btn @click="chooseOption('rock')">Rock</v-btn>
+      <v-btn @click="chooseOption('paper')">Paper</v-btn>
+      <v-btn @click="chooseOption('scissors')">Scissors</v-btn>
+    </div>
+    <div v-if="result !== null">
+      <h3>{{ result }}</h3>
+      <v-btn @click="resetGame">Play Again</v-btn>
+    </div>
+  </div> -->
+</template>

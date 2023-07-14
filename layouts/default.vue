@@ -1,13 +1,21 @@
+<script lang="ts" setup></script>
+
 <template>
-  <v-app dark>
+  <v-app theme="VuetifyTheme">
     <!-- <Header /> -->
-    <v-main>
+    <v-main class="main-wrapper">
       <slot />
     </v-main>
+
     <!-- <Footer /> -->
   </v-app>
 </template>
 
-<script lang="ts" setup></script>
-
-<style></style>
+<style scoped lang="scss">
+.main-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

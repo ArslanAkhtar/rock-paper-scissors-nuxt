@@ -1,8 +1,10 @@
+<script lang="ts" setup></script>
+
 <template>
-  <div>
+  <v-container>
     <h1>Welcome to Rock Paper Scissors!</h1>
-    <nuxt-link to="/play">Start Game</nuxt-link>
-  </div>
+    <v-btn to="/play">Start</v-btn>
+  </v-container>
 </template>
 
-<script lang="ts" setup></script>
+<style scoped lang="scss"></style>
