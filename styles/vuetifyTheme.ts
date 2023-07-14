@@ -4,6 +4,7 @@ const VuetifyTheme: ThemeDefinition = {
   dark: false,
   colors: {
     background: "#14173a",
+    outline: "#000",
     surface: "#FFFFFF",
     primary: "#ee0053",
     "primary-darken-1": "#3700B3",

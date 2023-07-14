@@ -3,7 +3,7 @@
 <template>
   <v-app theme="VuetifyTheme">
     <!-- <Header /> -->
-    <v-main class="glow-effect">
+    <v-main class="background-effect">
       <v-container>
         <section class="main-wrapper"><slot /></section
       ></v-container>
@@ -19,13 +19,13 @@
   justify-content: center;
 }
 
-.glow-effect {
+.background-effect {
   position: relative;
-  background-image: radial-gradient(rgba(30, 51, 82, 0.2), transparent);
+  background-image: radial-gradient(rgba(30, 51, 82, 0.5), transparent);
   overflow: hidden;
 }
 
-.glow-effect::before {
+.background-effect::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -35,7 +35,7 @@
   height: 200%;
   background-color: rgba(30, 51, 82, 0.1);
   border-radius: 50%;
-  z-index: 1;
+  z-index: 0;
 
   background: linear-gradient(
     45deg,
@@ -43,7 +43,7 @@
     rgba(25, 36, 68, 0.2) 25%,
     rgba(25, 38, 72, 0.3) 50%,
     rgba(29, 45, 78, 0.2) 75%,
-    rgba(29, 48, 80, 0.1) 100%
+    rgba(30, 53, 84, 0.4) 100%
   );
   background-size: 200% 200%;
   background-position: 0% 50%;
