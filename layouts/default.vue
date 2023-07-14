@@ -3,8 +3,10 @@
 <template>
   <v-app theme="VuetifyTheme">
     <!-- <Header /> -->
-    <v-main class="main-wrapper">
-      <slot />
+    <v-main class="glow-effect">
+      <v-container>
+        <section class="main-wrapper"><slot /></section
+      ></v-container>
     </v-main>
 
     <!-- <Footer /> -->
@@ -13,9 +15,37 @@
 
 <style scoped lang="scss">
 .main-wrapper {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+}
+
+.glow-effect {
+  position: relative;
+  background-image: radial-gradient(rgba(30, 51, 82, 0.2), transparent);
+  overflow: hidden;
+}
+
+.glow-effect::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background-color: rgba(30, 51, 82, 0.1);
+  border-radius: 50%;
+  z-index: 1;
+
+  background: linear-gradient(
+    45deg,
+    rgba(24, 30, 64, 0.1) 0%,
+    rgba(25, 36, 68, 0.2) 25%,
+    rgba(25, 38, 72, 0.3) 50%,
+    rgba(29, 45, 78, 0.2) 75%,
+    rgba(29, 48, 80, 0.1) 100%
+  );
+  background-size: 200% 200%;
+  background-position: 0% 50%;
 }
 </style>
