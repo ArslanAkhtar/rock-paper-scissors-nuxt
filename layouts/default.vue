@@ -5,8 +5,10 @@
     <!-- <Header /> -->
     <v-main class="background-effect">
       <v-container>
-        <section class="main-wrapper"><slot /></section
-      ></v-container>
+        <section class="main-wrapper">
+          <slot />
+        </section>
+      </v-container>
     </v-main>
 
     <!-- <Footer /> -->
