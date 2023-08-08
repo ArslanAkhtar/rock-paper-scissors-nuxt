@@ -1,3 +1,14 @@
 {
-  "cSpell.words": ["btns", "gsap", "materialdesignicons", "vuetify"]
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "cSpell.words": [
+    "btns",
+    "composables",
+    "gsap",
+    "materialdesignicons",
+    "Nuxt",
+    "vuetify"
+  ]
 }

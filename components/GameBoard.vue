@@ -1,93 +1,93 @@
 <script lang="ts" setup>
-import gsap from "gsap";
-import { ref } from "vue";
-import { GameButtons, ButtonColors } from "@/utils/enum";
+import gsap from 'gsap'
+import { ref } from 'vue'
+import { GameButtons, ButtonColors } from '@/utils/enum'
 
 const emit = defineEmits<{
-  (e: "chooseOption", value: string): void;
-  (e: "playAgain"): void;
-}>();
+  (e: 'chooseOption', value: string): void;
+  (e: 'playAgain'): void;
+}>()
 
 defineProps({
   houseSelection: {
     type: String,
-    default: null, // or undefined, depending on your use case
+    default: null // or undefined, depending on your use case
   },
   result: {
     type: String,
-    default: null, // or undefined, depending on your use case
-  },
-});
+    default: null // or undefined, depending on your use case
+  }
+})
 
-const gameBoard = ref();
+const gameBoard = ref()
 
-let ctx: any;
+let ctx: any
 
 const toggleTimeline = (element: string) => {
   ctx = gsap.context((self: any) => {
-    const selectedBoardTitles = self?.selector(".selected-side__title");
-    const houseSide = self?.selector(".house-side")[0];
+    const selectedBoardTitles = self?.selector('.selected-side__title')
+    const houseSide = self?.selector('.house-side')[0]
 
-    const tl = gsap.timeline({ onComplete: () => completeAnimation(element) });
-    const button = self?.selector(`.${element}`)[0];
-    const triangle = self?.selector("#triangle")[0];
-    const otherButtons = self?.selector(`.player-button:not(.${element})`);
+    const tl = gsap.timeline({ onComplete: () => completeAnimation(element) })
+    const button = self?.selector(`.${element}`)[0]
+    const triangle = self?.selector('#triangle')[0]
+    const otherButtons = self?.selector(`.player-button:not(.${element})`)
 
     otherButtons.forEach((btn: any) => {
-      tl.to(btn, { opacity: 0, display: "none", duration: 0.1 });
-    });
+      tl.to(btn, { opacity: 0, display: 'none', duration: 0.1 })
+    })
 
-    tl.to(triangle, { opacity: 0, display: "none", duration: 0.1 });
+    tl.to(triangle, { opacity: 0, display: 'none', duration: 0.1 })
 
-    tl.to(button, { left: 15, top: 60, rotation: 360, duration: 0.5 });
+    tl.to(button, { left: 15, top: 60, rotation: 360, duration: 0.5 })
 
     selectedBoardTitles.forEach((title: any) => {
-      tl.to(title, { opacity: 1, duration: 0.2 });
-    });
+      tl.to(title, { opacity: 1, duration: 0.2 })
+    })
 
-    tl.to(houseSide, { opacity: 1, display: "block", duration: 0.4 });
+    tl.to(houseSide, { opacity: 1, display: 'block', duration: 0.4 })
 
-    button.disabled = true;
-  }, gameBoard.value);
-};
+    button.disabled = true
+  }, gameBoard.value)
+}
 
 const completeAnimation = (element: string) => {
   const scramble = gsap.timeline({
     repeat: 5,
     repeatDelay: 0.2,
     onComplete: () => {
-      otherButtons[0].style.opacity = "0";
-      emit("chooseOption", element);
-    },
-  });
+      otherButtons[0].style.opacity = '0'
+      emit('chooseOption', element)
+    }
+  })
 
-  const otherButtons = ctx?.selector(`.house-button`).reverse();
-  scramble.to(otherButtons[0], { opacity: 0, display: "none", duration: 0.2 });
-  scramble.to(otherButtons[1], { opacity: 0, display: "none", duration: 0.2 });
-  scramble.to(otherButtons[2], { opacity: 0, display: "none", duration: 0.2 });
-  scramble.to(otherButtons[0], { opacity: 1, display: "block", duration: 0.2 });
-};
+  const otherButtons = ctx?.selector('.house-button').reverse()
+  scramble.to(otherButtons[0], { opacity: 0, display: 'none', duration: 0.2 })
+  scramble.to(otherButtons[1], { opacity: 0, display: 'none', duration: 0.2 })
+  scramble.to(otherButtons[2], { opacity: 0, display: 'none', duration: 0.2 })
+  scramble.to(otherButtons[0], { opacity: 1, display: 'block', duration: 0.2 })
+}
 
 const restart = () => {
-  emit("playAgain");
-  ctx.revert(); // <- Easy Cleanup!
-};
+  emit('playAgain')
+  ctx.revert() // <- Easy Cleanup!
+}
 </script>
 
 <template>
   <section class="game-board">
-    <div class="game-board__item" ref="gameBoard">
+    <div ref="gameBoard" class="game-board__item">
       <div class="player-board">
         <img
+          id="triangle"
           src="@/static/images/bg-triangle.svg"
           alt="GameBoardBG"
-          id="triangle"
-        />
+        >
 
         <v-btn
           v-for="buttonName in Object.values(GameButtons)"
-          class="ma-2 game-board__item__btn player-button"
           :key="buttonName"
+          class="ma-2 game-board__item__btn player-button"
           :class="buttonName"
           variant="elevated"
           :color="ButtonColors[buttonName]"
@@ -104,29 +104,35 @@ const restart = () => {
               :src="`../static/images/icon-${buttonName}.svg`"
               :alt="buttonName"
               class="button-icon"
-            />
+            >
           </div>
         </v-btn>
       </div>
 
       <div class="selected-board">
         <div class="selected-side player">
-          <div class="text-h5 selected-side__title">YOU PICKED</div>
-          <div class="place-holder"></div>
+          <div class="text-h5 selected-side__title">
+            YOU PICKED
+          </div>
+          <div class="place-holder" />
         </div>
 
-        <div class="result" v-if="result">
-          <div class="text-h4 result__title">{{ result }}</div>
+        <div v-if="result" class="result">
+          <div class="text-h4 result__title">
+            {{ result }}
+          </div>
           <v-btn class="result__btn" variant="elevated" @click="restart">
             PLAY AGAIN
           </v-btn>
         </div>
 
         <div class="selected-side house">
-          <div class="text-h5 selected-side__title">THE HOUSE PICKED</div>
+          <div class="text-h5 selected-side__title">
+            THE HOUSE PICKED
+          </div>
 
           <div class="place-holder house-side">
-            <div class="house-pick" id="scramble">
+            <div id="scramble" class="house-pick">
               <v-btn
                 v-if="houseSelection"
                 class="game-board__item__btn house-button"
@@ -147,14 +153,14 @@ const restart = () => {
                     :src="`../static/images/icon-${houseSelection}.svg`"
                     :alt="houseSelection"
                     class="button-icon"
-                  />
+                  >
                 </div>
               </v-btn>
 
               <v-btn
                 v-for="buttonName in Object.values(GameButtons)"
-                class="game-board__item__btn house-button"
                 :key="buttonName + 'house'"
+                class="game-board__item__btn house-button"
                 :class="buttonName"
                 variant="elevated"
                 :color="ButtonColors[buttonName]"
@@ -172,7 +178,7 @@ const restart = () => {
                     :src="`../static/images/icon-${buttonName}.svg`"
                     :alt="buttonName"
                     class="button-icon"
-                  />
+                  >
                 </div>
               </v-btn>
             </div>
