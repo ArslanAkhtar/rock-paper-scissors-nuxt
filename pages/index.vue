@@ -1,4 +1,15 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+const query = gql`
+  mutation Mutation {
+    createRoom(roomId: 1)
+  }
+`
+const variables = { limit: 5 }
+const { data } = await useAsyncQuery(query, variables)
+
+console.log('data', data.value)
+</script>
 
 <template>
   <div class="flex flex-col justify-center align-center max-w-xl w-full p-8">

@@ -16,11 +16,12 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
     "@nuxt/devtools": "latest",
+    "@nuxtjs/apollo": "^5.0.0-alpha.6",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/tailwindcss": "^6.8.0",
-    "@types/node": "^18.17.1",
     "@types/gsap": "^3.0.0",
+    "@types/node": "^18.17.1",
     "@vue/test-utils": "^2.4.0",
     "@vue/vue3-jest": "^29.2.4",
     "babel": "^6.23.0",
@@ -35,9 +36,11 @@
     "vue": "^3.3.4"
   },
   "dependencies": {
-    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@apollo/client": "^3.8.0",
     "@mdi/font": "^7.2.96",
+    "@nuxtjs/tailwindcss": "^6.8.0",
     "@types/jest": "^29.5.3",
+    "graphql-ws": "^5.14.0",
     "gsap": "^3.12.2",
     "sass": "^1.62.1",
     "vuetify": "^3.2.4"
