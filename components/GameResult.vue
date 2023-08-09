@@ -1,17 +1,23 @@
 <script setup>
 defineProps({
-  playerScore: Number,
-});
+  playerScore: { type: Number, default: 0 }
+})
 </script>
 
 <template>
   <v-card class="mx-auto mb-6 result-card" variant="outlined">
     <section class="result-card__items">
-      <div class="text-h3 result-card__title">ROCK PAPER SCISSORS</div>
+      <div class="text-h3 result-card__title">
+        ROCK PAPER SCISSORS
+      </div>
 
       <v-card class="result-card__scores">
-        <div class="text-h6 text-primary result-card__scores_title">SCORE</div>
-        <div class="text-h2 result-card__scores_val">{{ playerScore }}</div>
+        <div class="text-h6 text-primary result-card__scores_title">
+          SCORE
+        </div>
+        <div class="text-h2 result-card__scores_val">
+          {{ playerScore }}
+        </div>
       </v-card>
     </section>
   </v-card>

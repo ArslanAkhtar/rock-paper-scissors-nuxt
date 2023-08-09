@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 const { chooseOption, playAgain, playerScore, computerOption, result } =
-  gameLogic();
+  gameLogic()
 </script>
 
 <template>
   <div class="game-wrapper">
-    <Result :playerScore="playerScore" />
+    <GameResult :playerScore="playerScore" />
     <GameBoard
-      @chooseOption="chooseOption"
       :houseSelection="(computerOption as string)"
       :result="(result as string)"
-      @playAgain="playAgain"
+      @chooseOption="chooseOption"
+      @playerScore="playAgain"
     />
   </div>
 </template>
