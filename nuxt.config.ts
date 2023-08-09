@@ -8,6 +8,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
 
+  runtimeConfig: {
+    public: {
+      baseUrl: 'http://localhost:3000'
+    }
+  },
+
   imports: {
     dirs: [
       // Scan top-level modules
