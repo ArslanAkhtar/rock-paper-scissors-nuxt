@@ -1,3 +1,7 @@
+<script setup>
+providePlayersContext()
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtLoadingIndicator />

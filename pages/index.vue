@@ -1,14 +1,13 @@
 <script lang="ts" setup>
+import { GameMode } from 'composables/playersContext'
 
-const query = gql`
-  mutation Mutation {
-    createRoom(roomId: 1)
-  }
-`
-const variables = { limit: 5 }
-const { data } = await useAsyncQuery(query, variables)
+const { selfPlayer, otherPlayer, gameMode } = injectPlayersContext()
+const selectGameMode = (props: GameMode) => { gameMode.value = props }
 
-console.log('data', data.value)
+onMounted(() => {
+  selectGameMode('single')
+  otherPlayer.value = ''
+})
 </script>
 
 <template>
@@ -17,7 +16,24 @@ console.log('data', data.value)
       Welcome to Rock Paper Scissors!
     </h1>
 
-    <v-btn to="/play">
+    <v-text-field
+      v-model="selfPlayer"
+      required
+      :rules="[() => !!selfPlayer || 'This field is required']"
+      label="Full Name"
+      placeholder="John Doe"
+      variant="outlined"
+      class="w-full my-8"
+    />
+
+    <v-btn @click="selectGameMode('single')">
+      Single Player
+    </v-btn>
+    <v-btn @click="selectGameMode('multi')">
+      Multi Player
+    </v-btn>
+
+    <v-btn :to="gameMode === 'single' ? '/play' : '/waiting-room'">
       Start
     </v-btn>
   </div>

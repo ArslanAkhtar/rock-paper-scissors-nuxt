@@ -14,5 +14,10 @@ export default defineNuxtConfig({
         wsEndpoint: 'ws://localhost:4000/graphql'
       }
     }
+  },
+  runtimeConfig: {
+    public: {
+      baseUrl: 'http://localhost:3000'
+    }
   }
 })
