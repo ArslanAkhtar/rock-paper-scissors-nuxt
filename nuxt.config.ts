@@ -6,7 +6,22 @@ export default defineNuxtConfig({
     transpile: ['vuetify', 'gsap']
   },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/apollo', '@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
+  imports: {
+    dirs: ['stores']
+  },
+  modules: [
+    '@pinia/nuxt',
+    '@nuxtjs/apollo',
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/tailwindcss'
+  ],
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      'defineStore', // import { defineStore } from 'pinia'
+      ['defineStore', 'definePiniaStore'] // import { defineStore as definePiniaStore } from 'pinia'
+    ]
+  },
   apollo: {
     clients: {
       default: {
