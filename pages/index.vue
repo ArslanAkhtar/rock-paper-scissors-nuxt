@@ -1,13 +1,7 @@
 <script lang="ts" setup>
-import { GameMode } from 'composables/playersContext'
 
-const { selfPlayer, otherPlayer, gameMode } = injectPlayersContext()
-const selectGameMode = (props: GameMode) => { gameMode.value = props }
+const state = usePlayersStore()
 
-onMounted(() => {
-  selectGameMode('single')
-  otherPlayer.value = ''
-})
 </script>
 
 <template>
@@ -17,24 +11,20 @@ onMounted(() => {
     </h1>
 
     <v-text-field
-      v-model="selfPlayer"
+      v-model="state.player1Name"
       required
-      :rules="[() => !!selfPlayer || 'This field is required']"
+      :rules="[() => !!state.player1Name || 'This field is required']"
       label="Full Name"
       placeholder="John Doe"
       variant="outlined"
       class="w-full my-8"
     />
 
-    <v-btn @click="selectGameMode('single')">
+    <v-btn :to="'/play'">
       Single Player
     </v-btn>
-    <v-btn @click="selectGameMode('multi')">
+    <v-btn :to="'/waiting-room'">
       Multi Player
-    </v-btn>
-
-    <v-btn :to="gameMode === 'single' ? '/play' : '/waiting-room'">
-      Start
     </v-btn>
   </div>
 </template>
