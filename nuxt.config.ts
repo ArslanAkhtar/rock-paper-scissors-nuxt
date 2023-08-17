@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   imports: {
-    dirs: ['stores']
+    autoImport: true,
+    dirs: ['./composables/**', './utils/**', 'stores']
   },
   modules: [
     '@pinia/nuxt',

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import gsap from 'gsap'
-import { ref } from 'vue'
+import { Choice } from 'utils/types'
 import { GameButtons, ButtonColors } from '@/utils/enum'
 
 const emit = defineEmits<{
-  (e: 'chooseOption', value: string): void;
+  (e: 'chooseOption', value: Choice): void;
   (e: 'playAgain'): void;
 }>()
 
-defineProps({
-  houseSelection: {
+const props = defineProps({
+  player2Choice: {
     type: String,
     default: null // or undefined, depending on your use case
   },
@@ -21,14 +21,20 @@ defineProps({
 
 const gameBoard = ref()
 
-let ctx: any
+let ctx: ReturnType<typeof gsap.context> | undefined
+
+watchEffect(() => {
+  if (props.player2Choice) {
+    completeAnimation()
+  }
+})
 
 const toggleTimeline = (element: string) => {
   ctx = gsap.context((self: any) => {
     const selectedBoardTitles = self?.selector('.selected-side__title')
     const houseSide = self?.selector('.house-side')[0]
 
-    const tl = gsap.timeline({ onComplete: () => completeAnimation(element) })
+    const tl = gsap.timeline({ onComplete: () => completeAnimation() })
     const button = self?.selector(`.${element}`)[0]
     const triangle = self?.selector('#triangle')[0]
     const otherButtons = self?.selector(`.player-button:not(.${element})`)
@@ -51,17 +57,15 @@ const toggleTimeline = (element: string) => {
   }, gameBoard.value)
 }
 
-const completeAnimation = (element: string) => {
+const completeAnimation = () => {
   const scramble = gsap.timeline({
-    repeat: 5,
     repeatDelay: 0.2,
     onComplete: () => {
       otherButtons[0].style.opacity = '0'
-      emit('chooseOption', element)
     }
   })
 
-  const otherButtons = ctx?.selector('.house-button').reverse()
+  const otherButtons = ctx?.selector?.('.house-button').reverse()
   scramble.to(otherButtons[0], { opacity: 0, display: 'none', duration: 0.2 })
   scramble.to(otherButtons[1], { opacity: 0, display: 'none', duration: 0.2 })
   scramble.to(otherButtons[2], { opacity: 0, display: 'none', duration: 0.2 })
@@ -70,7 +74,7 @@ const completeAnimation = (element: string) => {
 
 const restart = () => {
   emit('playAgain')
-  ctx.revert() // <- Easy Cleanup!
+  ctx?.revert() // <- Easy Cleanup!
 }
 </script>
 
@@ -95,6 +99,7 @@ const restart = () => {
           fab
           @click="
             () => {
+              emit('chooseOption', buttonName)
               toggleTimeline(buttonName);
             }
           "
@@ -134,24 +139,24 @@ const restart = () => {
           <div class="place-holder house-side">
             <div id="scramble" class="house-pick">
               <v-btn
-                v-if="houseSelection"
+                v-if="player2Choice"
                 class="game-board__item__btn house-button"
-                :class="houseSelection"
+                :class="player2Choice"
                 variant="elevated"
                 :rounded="true"
                 :disabled="true"
-                :color="ButtonColors[houseSelection as GameButtons]"
+                :color="ButtonColors[player2Choice as GameButtons]"
                 fab
                 @click="
                   () => {
-                    toggleTimeline(houseSelection);
+                    toggleTimeline(player2Choice);
                   }
                 "
               >
                 <div class="button-bg">
                   <img
-                    :src="`../static/images/icon-${houseSelection}.svg`"
-                    :alt="houseSelection"
+                    :src="`../static/images/icon-${player2Choice}.svg`"
+                    :alt="player2Choice"
                     class="button-icon"
                   >
                 </div>

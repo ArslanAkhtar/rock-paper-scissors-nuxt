@@ -4,41 +4,27 @@ const isSinglePlayer = computed(() => !readFirstQ(route, 'id'))
 
 const { chooseOption, playAgain, playerScore, computerOption, result } =
   gameLogic()
-const { makeChoice, resetGame } = multiplayerLogic()
+const { finalResult, player2Choice, makeChoice, resetGame } =
+  useMultiplayerLogic(
+    readFirstQ(route, 'id'),
+    readFirstQ(route, 'hostId') || readFirstQ(route, 'guestId')
+  )
 
-const { load, result: statusResult } = useLazyQuery(
-  gql`
-    query CurrentStatus($roomId: ID!) {
-      currentStatus(roomId: $roomId) {
-        playerChoices {
-          PlayerId
-        }
-      }
-    }
-  `
+const choose = computed(() =>
+  isSinglePlayer.value ? chooseOption : makeChoice
 )
-
-onMounted(() => {
-  const id = readFirstQ(route, 'id')
-  if (id) {
-    load(undefined, { roomId: id })
-  }
-})
-
-console.log({ statusResult })
-
-const choose = computed(() => (isSinglePlayer ? chooseOption : makeChoice))
-const reset = computed(() => (isSinglePlayer ? playAgain : resetGame))
+const reset = computed(() => (isSinglePlayer.value ? playAgain : resetGame))
 </script>
 
 <template>
   <div class="game-wrapper">
+    {{ finalResult }}
     <GameResult :playerScore="playerScore" />
     <GameBoard
-      :houseSelection="(computerOption as string)"
-      :result="(result as string)"
-      @chooseOption="choose"
-      @playAgain="reset"
+      :player2Choice="computerOption || player2Choice"
+      :result="result || undefined"
+      @choose-option="choose"
+      @play-again="reset"
     />
   </div>
 </template>

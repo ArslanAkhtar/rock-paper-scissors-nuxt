@@ -1,52 +1,62 @@
 <script lang="ts" setup>
 import { uuid } from 'vue-uuid'
-import { useClipboard, usePermission } from '@vueuse/core'
 
 const router = useRouter()
 const route = useRoute()
 const config = useRuntimeConfig()
 const state = usePlayersStore()
+const { isSupported, copy } = useCopy()
 
 const isRoomCreated = ref(false)
 const isReadyToBeRedirected = ref(false)
-const isUserGuest = computed(
-  () => !!route.query.id && !!route.query.hostId
-)
+const isUserGuest = computed(() => !!route.query.id && !!route.query.hostId)
 const waitingRoomLink = computed(
   () => `${config.public.baseUrl}${state.waitingRoomLink}`
 )
+
+// Auto-start when ready
+const secondsToStart = useCountDown({
+  enabled: isReadyToBeRedirected.value,
+  seconds: 3,
+  callback: () => {
+    const playerIdString = isUserGuest
+      ? `guestId=${state.player2Id}`
+      : `hostId=${state.player1Id}`
+    router.push(`${state.matchLink}&${playerIdString}`)
+  },
+  clearCallback: () => {
+    isReadyToBeRedirected.value = false
+  }
+})
 
 // Save the host name as other player when I'm joining his match
 watchEffect(() => {
   if (isUserGuest.value) {
     state.setMatchCode(readFirstQ(route, 'id'))
     state.setPlayer1('', '')
-    state.setPlayer2(readFirstQ(route, 'hostId'), readFirstQ(route, 'hostName'))
+    state.setPlayer2(
+      readFirstQ(route, 'hostId'),
+      readFirstQ(route, 'hostName')
+    )
   }
 })
 
-const { mutate: registerUser, onDone: onUserRegistered } = useMutation(gql`
-  mutation RegisterPlayer($playerId: ID!, $playerName: String!) {
-    registerPlayer(playerId: $playerId, playerName: $playerName)
-  }
-`)
-onUserRegistered(() => {
-  if (isUserGuest.value) {
-    isReadyToBeRedirected.value = true
-  } else {
-    isRoomCreated.value = true
+const { mutate: registerUser } = useUserRegister({
+  onDone: () => {
+    if (isUserGuest.value) {
+      isReadyToBeRedirected.value = true
+    } else {
+      isRoomCreated.value = true
+    }
   }
 })
 
-const { mutate: createRoom, onDone: onRoomCreated } = useMutation(gql`
-  mutation CreateRoom($roomId: ID!) {
-    createRoom(roomId: $roomId)
+const { mutate: createRoom } = useCreateRoom({
+  onDone: () => {
+    const selfId = uuid.v4()
+    state.setPlayer1(selfId, state.player1Name)
+    registerUser({ playerId: selfId, playerName: state.player1Name })
   }
-`)
-onRoomCreated(() => {
-  const selfId = uuid.v4()
-  state.setPlayer1(selfId, state.player1Name)
-  registerUser({ playerId: selfId, playerName: state.player1Name })
 })
 
 // Create room when user enters the page
@@ -58,15 +68,6 @@ onMounted(() => {
   }
 })
 
-// Copy the room link
-const { isSupported, copy } = useClipboard()
-const permissionWrite = usePermission('clipboard-write')
-const copyRoomLink = () => {
-  if (permissionWrite.value === 'prompt') {
-    copy(waitingRoomLink.value)
-  }
-}
-
 // Get guest name
 const guestPlayerTextInput = ref('')
 const setGuestReady = () => {
@@ -75,26 +76,6 @@ const setGuestReady = () => {
   registerUser({ playerId: selfId, playerName: guestPlayerTextInput.value })
 }
 
-// Auto start section
-const secondsToStart = ref(3)
-const countDownToStartInterval = ref<NodeJS.Timer | null>(null)
-watchEffect(() => {
-  if (isReadyToBeRedirected.value) {
-    countDownToStartInterval.value = setInterval(() => {
-      if (secondsToStart.value > -1) {
-        secondsToStart.value--
-      } else {
-        router.push(state.matchLink)
-      }
-    }, 1000)
-  }
-})
-onBeforeUnmount(() => {
-  if (countDownToStartInterval.value) {
-    isReadyToBeRedirected.value = false
-    clearInterval(countDownToStartInterval.value)
-  }
-})
 </script>
 
 <template>
@@ -108,7 +89,7 @@ onBeforeUnmount(() => {
 
     <div class="flex flex-col my-8 gap-4 p-4 bg-slate-600 rounded-md">
       <p>{{ state.waitingRoomLink }}</p>
-      <v-btn v-if="isSupported" @click="copyRoomLink()">
+      <v-btn v-if="isSupported" @click="copy(waitingRoomLink)">
         Copy
       </v-btn>
       <span v-else>Copy the meeting code and give it to your friend</span>
