@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-const { createUser, UserState } = userLogic()
+const { createUser, UserState, isMultiplayer } = userLogic()
+
+const selectGameMode = () => {
+  isMultiplayer().value = true
+}
 
 </script>
 
@@ -12,7 +16,7 @@ const { createUser, UserState } = userLogic()
     <CreatePlayer v-if="UserState().value.id === ''" @createUser="createUser" />
 
     <div v-if="UserState().value.id !== ''">
-      <v-btn to="/waiting-area">
+      <v-btn to="/waiting-area" @click="selectGameMode">
         Multiplayer
       </v-btn>
       <v-btn to="/play">

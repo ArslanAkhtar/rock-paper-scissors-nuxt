@@ -21,9 +21,12 @@ const props = defineProps({
 const emit = defineEmits(['room-joined'])
 
 const { joinRoom } = multiplayerLogic()
+const { selectedRoomId } = userLogic()
 
 const joinRoomById = async () => {
   const { roomId, playerId } = props
+  selectedRoomId().value = roomId
+
   await joinRoom(roomId, playerId)
   emit('room-joined')
 }

@@ -2,6 +2,18 @@
 const { chooseOption, playAgain, playerScore, computerOption, result } =
   gameLogic()
 
+const { isMultiplayer, UserState, selectedRoomId } = userLogic()
+
+const { makeChoice } = multiplayerLogic()
+
+const selectOption = (choice: string) => {
+  if (isMultiplayer().value) {
+    makeChoice(selectedRoomId().value, UserState().value.id, choice)
+  } else {
+    chooseOption(choice)
+  }
+}
+
 </script>
 
 <template>
@@ -10,7 +22,7 @@ const { chooseOption, playAgain, playerScore, computerOption, result } =
     <GameBoard
       :houseSelection="(computerOption as string)"
       :result="(result as string)"
-      @chooseOption="chooseOption"
+      @choose-option="selectOption"
       @playerScore="playAgain"
     />
   </div>

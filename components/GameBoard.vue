@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { GameButtons, ButtonColors } from '@/utils/enum'
 
 const emit = defineEmits<{
-  (e: 'chooseOption', value: string): void;
+  (e: 'choose-option', value: string): void;
   (e: 'playAgain'): void;
 }>()
 
@@ -57,7 +57,7 @@ const completeAnimation = (element: string) => {
     repeatDelay: 0.2,
     onComplete: () => {
       otherButtons[0].style.opacity = '0'
-      emit('chooseOption', element)
+      emit('choose-option', element)
     }
   })
 

@@ -7,6 +7,8 @@ export const userLogic = () => {
   }
 
   const UserState = () => useState<User>('userDetails', () => defaultUser)
+  const isMultiplayer = () => useState('isMultiplayer', () => false)
+  const selectedRoomId = () => useState<string>('selectedRoomId', () => '')
 
   const createUser = async (name:string) => {
     const variables = {
@@ -19,6 +21,8 @@ export const userLogic = () => {
 
   return {
     createUser,
-    UserState
+    UserState,
+    isMultiplayer,
+    selectedRoomId
   }
 }
