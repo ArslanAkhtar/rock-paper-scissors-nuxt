@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { chooseOption, playAgain, playerScore, computerOption, result } =
   gameLogic()
+
 </script>
 
 <template>

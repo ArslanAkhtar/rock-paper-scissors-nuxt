@@ -1,14 +1,6 @@
 <script lang="ts" setup>
+const { createUser, UserState } = userLogic()
 
-const query = gql`
-  mutation Mutation {
-    createRoom(roomId: 1)
-  }
-`
-const variables = { limit: 5 }
-const { data } = await useAsyncQuery(query, variables)
-
-console.log('data', data.value)
 </script>
 
 <template>
@@ -17,9 +9,16 @@ console.log('data', data.value)
       Welcome to Rock Paper Scissors!
     </h1>
 
-    <v-btn to="/play">
-      Start
-    </v-btn>
+    <CreatePlayer v-if="UserState().value.id === ''" @createUser="createUser" />
+
+    <div v-if="UserState().value.id !== ''">
+      <v-btn to="/waiting-area">
+        Multiplayer
+      </v-btn>
+      <v-btn to="/play">
+        Single Player
+      </v-btn>
+    </div>
   </div>
 </template>
 
