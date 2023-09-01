@@ -1,12 +1,11 @@
-import { GET_ALL_ROOMS, CREATE_ROOM, JOIN_ROOM, MAKE_CHOICE } from '../graphql/queries'
+import { GET_ALL_ROOMS, CREATE_ROOM, JOIN_ROOM, MAKE_CHOICE, GET_RESULT } from '../graphql/queries'
 
 export const multiplayerLogic = () => {
   const Rooms = ref<any>([])
+  const otherPlayerSelection = () => useState<null | string>('optionSelection', () => null)
 
   const createRoom = async () => {
-    const { data } = await useAsyncQuery(CREATE_ROOM)
-
-    console.log('data', data.value)
+    await useAsyncQuery(CREATE_ROOM)
   }
 
   const getAllRooms = async () => {
@@ -22,9 +21,7 @@ export const multiplayerLogic = () => {
       roomId,
       playerId
     }
-    const { data } = await useAsyncQuery(JOIN_ROOM, variables)
-
-    console.log('data', data.value)
+    await useAsyncQuery(JOIN_ROOM, variables)
   }
 
   const makeChoice = async (roomId: string, playerId:string, choice:string) => {
@@ -33,11 +30,15 @@ export const multiplayerLogic = () => {
       playerId,
       choice
     }
+    await useAsyncQuery(MAKE_CHOICE, variables)
+  }
 
-    console.log('variables', variables)
-    const { data } = await useAsyncQuery(MAKE_CHOICE, variables)
+  const getResult = async (roomId: string) => {
+    const variables = { roomId }
+    const { data } = await useAsyncQuery(GET_RESULT, variables)
+    const result = data?.value as any
 
-    console.log('data', data.value)
+    return result?.getGameResult
   }
 
   return {
@@ -45,6 +46,8 @@ export const multiplayerLogic = () => {
     createRoom,
     getAllRooms,
     joinRoom,
-    makeChoice
+    makeChoice,
+    getResult,
+    otherPlayerSelection
   }
 }

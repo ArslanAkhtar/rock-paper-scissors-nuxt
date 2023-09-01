@@ -64,3 +64,22 @@ mutation MakeChoice($roomId: String!, $playerId: String!, $choice: String!) {
   }
 }
 `
+
+export const GET_RESULT = gql`
+query GetGameResult($roomId: String!) {
+  getGameResult(roomId: $roomId) {
+    roomId
+    users {
+      id
+      playerName
+    }
+    games {
+      playerChoices {
+        PlayerId
+        PlayerChoice
+      }
+      result
+    }
+  }
+}
+`

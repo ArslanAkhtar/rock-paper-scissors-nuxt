@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+definePageMeta({
+  middleware: 'user'
+})
 const { createRoom, getAllRooms, Rooms } = multiplayerLogic()
 const { UserState } = userLogic()
 
@@ -13,7 +16,6 @@ const playerId = await UserState()?.value?.id
 const roomJoined = async () => {
   await getAllRooms()
 }
-
 </script>
 
 <template>

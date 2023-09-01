@@ -15,8 +15,9 @@ export default defineNuxtConfig({
       'composables/**'
     ]
   },
+
   devtools: { enabled: true },
-  modules: ['@nuxtjs/apollo', '@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/tailwindcss'],
   apollo: {
     clients: {
       default: {
@@ -25,4 +26,5 @@ export default defineNuxtConfig({
       }
     }
   }
+
 })

@@ -53,7 +53,7 @@ const joinRoomById = async () => {
       <v-btn v-if="playersCount !== 2" variant="outlined" @click="joinRoomById">
         Join Room
       </v-btn>
-      <v-btn v-if="playersCount === 2" variant="outlined" to="/play">
+      <v-btn variant="outlined" to="/play">
         Start
       </v-btn>
     </v-card-actions>

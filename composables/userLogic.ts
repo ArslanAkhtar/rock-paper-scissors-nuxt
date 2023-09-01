@@ -1,5 +1,5 @@
 import { REGISTER_USERS } from '../graphql/queries'
-import { User } from 'utils/types'
+import { User } from '~/utils/types'
 export const userLogic = () => {
   const defaultUser = {
     id: '',

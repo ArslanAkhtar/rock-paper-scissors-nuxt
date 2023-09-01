@@ -9,21 +9,22 @@ const emit = defineEmits<{
 }>()
 
 defineProps({
-  houseSelection: {
-    type: String,
-    default: null // or undefined, depending on your use case
-  },
   result: {
     type: String,
     default: null // or undefined, depending on your use case
   }
 })
 
+const { isMultiplayer } = userLogic()
+
 const gameBoard = ref()
 
 let ctx: any
 
 const toggleTimeline = (element: string) => {
+  if (isMultiplayer().value) {
+    emit('choose-option', element)
+  }
   ctx = gsap.context((self: any) => {
     const selectedBoardTitles = self?.selector('.selected-side__title')
     const houseSide = self?.selector('.house-side')[0]
@@ -57,7 +58,9 @@ const completeAnimation = (element: string) => {
     repeatDelay: 0.2,
     onComplete: () => {
       otherButtons[0].style.opacity = '0'
-      emit('choose-option', element)
+      if (!isMultiplayer) {
+        emit('choose-option', element)
+      }
     }
   })
 
@@ -72,6 +75,13 @@ const restart = () => {
   emit('playAgain')
   ctx.revert() // <- Easy Cleanup!
 }
+
+//
+const { otherPlayerSelection } = multiplayerLogic()
+
+console.log('otherPlayerSelection ', otherPlayerSelection().value)
+
+// const houseSelection = ref(otherPlayerSelection().value)
 </script>
 
 <template>
@@ -134,24 +144,19 @@ const restart = () => {
           <div class="place-holder house-side">
             <div id="scramble" class="house-pick">
               <v-btn
-                v-if="houseSelection"
+                v-if="otherPlayerSelection().value"
                 class="game-board__item__btn house-button"
-                :class="houseSelection"
+                :class="otherPlayerSelection().value"
                 variant="elevated"
                 :rounded="true"
                 :disabled="true"
-                :color="ButtonColors[houseSelection as GameButtons]"
+                :color="ButtonColors[otherPlayerSelection().value as GameButtons]"
                 fab
-                @click="
-                  () => {
-                    toggleTimeline(houseSelection);
-                  }
-                "
               >
                 <div class="button-bg">
                   <img
-                    :src="`../static/images/icon-${houseSelection}.svg`"
-                    :alt="houseSelection"
+                    :src="`../static/images/icon-${otherPlayerSelection().value}.svg`"
+                    :alt="(otherPlayerSelection().value as string)"
                     class="button-icon"
                   >
                 </div>
